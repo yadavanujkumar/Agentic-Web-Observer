@@ -13,17 +13,20 @@ class TestVisionEngine:
     
     def test_init_openai(self):
         """Test initialization with OpenAI provider."""
-        with patch('src.vision_engine.vision_engine.OpenAI'):
-            engine = VisionEngine(provider="openai", model="gpt-4o")
-            assert engine.provider == "openai"
-            assert engine.model == "gpt-4o"
+        with patch('openai.OpenAI', create=True):
+            with patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'}):
+                engine = VisionEngine(provider="openai", model="gpt-4o")
+                assert engine.provider == "openai"
+                assert engine.model == "gpt-4o"
     
     def test_init_google(self):
         """Test initialization with Google provider."""
-        with patch('src.vision_engine.vision_engine.genai'):
-            engine = VisionEngine(provider="google", model="gemini-1.5-pro")
-            assert engine.provider == "google"
-            assert engine.model == "gemini-1.5-pro"
+        with patch('google.generativeai.configure', create=True):
+            with patch('google.generativeai.GenerativeModel', create=True):
+                with patch.dict('os.environ', {'GOOGLE_API_KEY': 'test-key'}):
+                    engine = VisionEngine(provider="google", model="gemini-1.5-pro")
+                    assert engine.provider == "google"
+                    assert engine.model == "gemini-1.5-pro"
     
     def test_init_invalid_provider(self):
         """Test initialization with invalid provider."""
@@ -32,29 +35,31 @@ class TestVisionEngine:
     
     def test_calculate_click_coordinates(self):
         """Test click coordinate calculation."""
-        with patch('src.vision_engine.vision_engine.OpenAI'):
-            engine = VisionEngine()
-            
-            # Test with bounding box (100, 200, 50, 30)
-            x, y = engine.calculate_click_coordinates((100, 200, 50, 30))
-            
-            # Center should be at (125, 215)
-            assert x == 125
-            assert y == 215
+        with patch('openai.OpenAI', create=True):
+            with patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'}):
+                engine = VisionEngine()
+                
+                # Test with bounding box (100, 200, 50, 30)
+                x, y = engine.calculate_click_coordinates((100, 200, 50, 30))
+                
+                # Center should be at (125, 215)
+                assert x == 125
+                assert y == 215
     
     def test_build_analysis_prompt(self):
         """Test prompt building."""
-        with patch('src.vision_engine.vision_engine.OpenAI'):
-            engine = VisionEngine()
-            
-            prompt = engine._build_analysis_prompt(
-                goal="Find login button",
-                context="Homepage"
-            )
-            
-            assert "Find login button" in prompt
-            assert "Homepage" in prompt
-            assert "JSON" in prompt
+        with patch('openai.OpenAI', create=True):
+            with patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'}):
+                engine = VisionEngine()
+                
+                prompt = engine._build_analysis_prompt(
+                    goal="Find login button",
+                    context="Homepage"
+                )
+                
+                assert "Find login button" in prompt
+                assert "Homepage" in prompt
+                assert "JSON" in prompt
     
     def test_detected_element_creation(self):
         """Test DetectedElement dataclass."""

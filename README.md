@@ -227,18 +227,3 @@ Contributions are welcome! Please follow these steps:
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- OpenAI for GPT-4o vision capabilities
-- Google for Gemini vision models
-- LangChain team for LangGraph framework
-- Playwright team for browser automation tools
-
-## 📧 Contact
-
-For questions or support, please open an issue on GitHub.
-
----
-
-**Built with ❤️ for the future of web automation**
